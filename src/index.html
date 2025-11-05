@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: antiquewhite;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .container {
+        height: 500px;
+        width: 500px;
+        background-color: rgb(149, 213, 255);
+        border: 1px solid black;
+    }
+    
+    header {
+        height: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid black;
+    }
+    
+    section {
+        height: 300px;
+        width: 500px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .city {
+        display: flex;
+        justify-content: center;
+        height: 80px;
+        width: 500px;
+        background-color: rgb(149, 213, 255);
+    }
+    
+    #time,
+    #currentTemp,
+    #desc {
+        height: 100px;
+        width: 500px;
+    }
+    
+    #citySelect {
+        display: flex;
+        border: none;
+        background-color: rgb(149, 213, 255);
+        width: 180px;
+        align-items: center;
+        font-size: 100%;
+    }
+    
+    #date {
+        display: flex;
+        justify-content: right;
+        margin-right: 20px;
+        width: 280px;
+        font-size: 30px;
+    }
+    
+    #clock {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        margin-left: 15 px;
+        width: 40px;
+        font-size: 30px;
+    }
+    
+    #currentTemp {
+        display: flex;
+        align-items: center;
+        border: 1px solid black;
+        height: 140px;
+        font-size: 30px;
+        border-radius: 30px;
+        width: 80%;
+        margin: 10px auto;
+    }
+    
+    #desc {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        border-radius: 30px;
+        border: 1px solid;
+        height: 140px;
+        width: 80%;
+        margin: 10px auto;
+    }
+    
+    #sun {
+        margin-left: 50px;
+        width: 50%;
+        font-size: 100px;
+    }
+    
+    #temp {
+        display: flex;
+        width: 50%;
+        justify-content: right;
+        margin-right: 20px;
+        color: rgb(3, 3, 3);
+    }
+    
+    #wind {
+        margin-right: 60px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Weather Forecast</h1>
+        </header>
+        <section>
+            <div class="infomation">
+                <div class="city">
+                    <select name="" id="citySelect">
+                        <option id="nt" value="Thành Phố Nha Trang" selected><strong>Thành Phố Nha Trang</strong></option>   
+                        <option id="hp" value="Thành Phố Hải Phòng">Thành Phố Hải Phòng</option>     
+                        <option id="hn" value="Thành Phố Hà Nội">Thành Phố Hà Nội</option>   
+                    </select>
+                    <i id='clock' class="fa-solid fa-clock" style="font-size: 40px; color: #000000;"></i>
+                    <p id="date" style="display: flex; align-items: center;"></p>
+                </div>
+                <div id="currentTemp">
+                    <i id='sun' class="fa-solid fa-sun" style="font-size: 90px; color: #f6ff00;"></i>
+                    <p id="temp"><strong></strong></p>
+                    <p id="wind"><strong></strong></p>
+                </div>
+
+                <div id="desc">
+                    <p id="description"><strong></strong></p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+<script>
+    document.getElementById("citySelect").addEventListener("change", async function() {
+        const city = this.value;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5500/weatherForecast', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({
+                    city: city
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById('date').innerText = data.date || "N/A";
+            document.getElementById('temp').innerText = data.temp + "°C";
+            document.getElementById('description').innerText = data.desc;
+            document.getElementById('wind').innerText = data.wind_speed + "Km/h";
+        } catch (err) {
+            console.error("Lỗi khi fetch API:", err);
+        }
+    });
+    window.onload = function() {
+        const citySelected = document.getElementById('citySelect');
+        citySelected.value = "Thành Phố Nha Trang";
+        citySelect.dispatchEvent(new Event("change"));
+    }
+</script>
+
+</html>
