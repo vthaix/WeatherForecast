@@ -1,3 +1,4 @@
 Flask
-python_weather
 gunicorn
+python_weather
+flask-cors
