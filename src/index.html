@@ -15,8 +15,8 @@
     }
     
     .container {
-        height: 500px;
-        width: 500px;
+        height: 400px;
+        width: 700px;
         background-color: rgb(149, 213, 255);
         border: 1px solid black;
     }
@@ -41,82 +41,75 @@
         display: flex;
         justify-content: center;
         height: 80px;
-        width: 500px;
+        width: 100%;
         background-color: rgb(149, 213, 255);
-    }
-    
-    #time,
-    #currentTemp,
-    #desc {
-        height: 100px;
-        width: 500px;
     }
     
     #citySelect {
         display: flex;
-        border: none;
+        justify-content: center;
         background-color: rgb(149, 213, 255);
-        width: 180px;
+        width: 200px;
+        margin-top: 20px;
+        height: 50px;
         align-items: center;
         font-size: 100%;
     }
     
-    #date {
-        display: flex;
-        justify-content: right;
-        margin-right: 20px;
-        width: 280px;
-        font-size: 30px;
+    .infomation {
+        width: 100%;
     }
     
-    #clock {
-        display: flex;
-        justify-content: right;
-        align-items: center;
-        margin-left: 15 px;
-        width: 40px;
-        font-size: 30px;
+    section {
+        width: 100%;
     }
     
-    #currentTemp {
-        display: flex;
-        align-items: center;
-        border: 1px solid black;
-        height: 140px;
-        font-size: 30px;
-        border-radius: 30px;
-        width: 80%;
-        margin: 10px auto;
-    }
-    
-    #desc {
+    .listWeather {
+        height: 200px;
+        width: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
+        gap: 25px;
+        margin: auto;
+    }
+    
+    .frame-day {
+        width: 20%;
+        margin-top: 10px;
+    }
+    
+    .date {
         font-size: 30px;
-        border-radius: 30px;
-        border: 1px solid;
-        height: 140px;
-        width: 80%;
-        margin: 10px auto;
+        height: 20%;
     }
     
-    #sun {
-        margin-left: 50px;
-        width: 50%;
-        font-size: 100px;
-    }
-    
-    #temp {
+    .temp {
         display: flex;
-        width: 50%;
-        justify-content: right;
-        margin-right: 20px;
-        color: rgb(3, 3, 3);
+        align-items: center;
+        height: 20%;
     }
     
-    #wind {
-        margin-right: 60px;
+    #icon {
+        height: 40%;
+        font-size: 70px;
+        color: black;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .desc {
+        height: 20%;
+        font-size: 20px;
+    }
+    
+    .date,
+    .temp,
+    .icon,
+    .desc {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
 </style>
 
@@ -129,32 +122,27 @@
             <div class="infomation">
                 <div class="city">
                     <select name="" id="citySelect">
-                        <option id="nt" value="Thành Phố Nha Trang" selected><strong>Thành Phố Nha Trang</strong></option>   
-                        <option id="hp" value="Thành Phố Hải Phòng">Thành Phố Hải Phòng</option>     
-                        <option id="hn" value="Thành Phố Hà Nội">Thành Phố Hà Nội</option>   
+                        <option id="nt" value="Nha Trang" selected><strong>Thành Phố Nha Trang</strong></option>   
+                        <option id="hp" value="Ho Chi Minh">Thành Phố Hồ Chí Minh</option>     
+                        <option id="hn" value="Ha Noi">Thành Phố Hà Nội</option>   
                     </select>
-                    <i id='clock' class="fa-solid fa-clock" style="font-size: 40px; color: #000000;"></i>
-                    <p id="date" style="display: flex; align-items: center;"></p>
-                </div>
-                <div id="currentTemp">
-                    <i id='sun' class="fa-solid fa-sun" style="font-size: 90px; color: #f6ff00;"></i>
-                    <p id="temp"><strong></strong></p>
-                    <p id="wind"><strong></strong></p>
-                </div>
 
-                <div id="desc">
-                    <p id="description"><strong></strong></p>
+                    <!-- <p id="date" style="display: flex; align-items: center;"></p> -->
                 </div>
-            </div>
+                <div class="listWeather" id="listWeather">
+                </div>
         </section>
-    </div>
+        <footer>
+            <p style="height: 30px; border-top: 1px solid black; display: flex; align-items: center; justify-content: center;">Đ/c: 8 Mạc Đĩnh Chi, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh</p>
+        </footer>
+        </div>
 </body>
 <script>
     document.getElementById("citySelect").addEventListener("change", async function() {
         const city = this.value;
 
         try {
-            const response = await fetch('http://127.0.0.1:5500/weatherForecast', {
+            const response = await fetch('http://127.0.0.1:5500/weatherForecast', { //https://weatherforecast-r0sh.onrender.com
                 method: 'POST',
                 headers: {
                     "Content-Type": 'application/json'
@@ -165,19 +153,28 @@
             });
 
             const data = await response.json();
+            console.log("DATA:", data);
+            const container = document.getElementById('listWeather');
+            container.innerHTML = "";
+            data.forEach(day => {
+                container.innerHTML += `
+                    <div class="frame-day" style="border-radius: 20px; border: 1px solid black;">
 
-            document.getElementById('date').innerText = data.date || "N/A";
-            document.getElementById('temp').innerText = data.temp + "°C";
-            document.getElementById('description').innerText = data.desc;
-            document.getElementById('wind').innerText = data.wind_speed + "Km/h";
+                        <div class="date">${day.day}</div>
+                        <div class="temp">${day.temp}</div>
+                        <i id="icon" class="${day.icon}"></i>
+                        <div class="desc">${day.desc}</div>
+                    </div>
+                `
+            })
         } catch (err) {
             console.error("Lỗi khi fetch API:", err);
         }
     });
     window.onload = function() {
         const citySelected = document.getElementById('citySelect');
-        citySelected.value = "Thành Phố Nha Trang";
-        citySelect.dispatchEvent(new Event("change"));
+        citySelected.value = "Nha Trang";
+        citySelected.dispatchEvent(new Event("change"));
     }
 </script>
 
